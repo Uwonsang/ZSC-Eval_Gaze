@@ -208,13 +208,21 @@ def main(args):
         eta_stm=0.2           # STM 부스트 비중(0.1~0.3)
     )
     
-    map_size = (1212, 758)
-    target_H = 960
-    pad_top = target_H - 758
-    
     try:
         image = env.play_render()
-        screen = pygame.display.set_mode((image.shape[1], image.shape[0]))
+        
+        image_W = image.shape[1]
+        image_H = image.shape[0]        
+        
+        map_W = image_W
+        map_H = int((image_W / 8 ) * 5)
+        pad_top = image_H - map_H
+        
+        grid_W = map_W // 8
+        grid_H = map_H // 5
+        
+        screen = pygame.display.set_mode((image_W, image_H))
+        # screen = pygame.display.set_mode((image.shape[1], image.shape[0]))
         screen.blit(pygame.surfarray.make_surface(np.rot90(np.flip(image[..., ::-1], 1))), (0, 0))
         pygame.display.flip()
 
@@ -266,7 +274,7 @@ def main(args):
                 cam_filtered = np.zeros_like(cam_heatmap)
                 cam_filtered[max_row, max_col] = cam_heatmap[max_row, max_col]
 
-                cam_resized = cv2.resize(cam_filtered, (1212, 758), interpolation=cv2.INTER_LINEAR)
+                cam_resized = cv2.resize(cam_filtered, (map_W, map_H), interpolation=cv2.INTER_LINEAR)
                 cam_resized = np.pad(cam_resized, ((pad_top, 0), (0, 0)), mode='constant', constant_values=0)
                 
                 heat_u8 = (cam_resized * 255).astype(np.uint8)
@@ -280,17 +288,13 @@ def main(args):
                 img_f = image.astype(np.float32)
                 blended = img_f * (1.0 - alpha) + heatmap_color * alpha
                 image = blended.clip(0, 255).astype(np.uint8)
-                
-                Hh, Wh = cam_heatmap.shape[:2]          # 예: 8x5
-                Hi, Wi = image.shape[:2]               # 원본 이미지 크기
-                
-                c, r = next_pos
 
-                cx = int(c*151.5) + 76         
-                cy = int(r*151.5)+pad_top + 76               
+                c, r = next_pos
+                cx = int(c*grid_W) + 76         
+                cy = int(r*grid_H)+pad_top + 76               
                 
                 trail.append((cx, cy))
-                trail_mask = np.zeros((Hi, Wi), dtype=np.float32)
+                trail_mask = np.zeros((image_H, image_W), dtype=np.float32)
                 
                 # (A) 연속 선 + 가우시안 블러 (연속감↑)
                 if len(trail) >= 2:
@@ -318,7 +322,7 @@ def main(args):
             elif all_args.is_cam == "Whole":
                 # filter max heatmap
                 
-                cam_resized = cv2.resize(A_t, (1212, 758), interpolation=cv2.INTER_LINEAR)
+                cam_resized = cv2.resize(A_t, (map_W, map_H), interpolation=cv2.INTER_LINEAR)
                 cam_resized = np.pad(cam_resized, ((pad_top, 0), (0, 0)), mode='constant', constant_values=0)
 
                 # cam_resized = cv2.resize(A_t, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_LINEAR)
@@ -338,13 +342,13 @@ def main(args):
                 Hi, Wi = image.shape[:2]               # 원본 이미지 크기
                 c, r = fix_rc
                 # c, r = next_pos
-            
-                cx = int(c*151.5) + 76         
-                cy = int(r*151.5)+pad_top + 76               
-                
+
+                cx = int(c*grid_W) + 76
+                cy = int(r*grid_H)+pad_top + 76
+
                 trail.append((cx, cy))
-                trail_mask = np.zeros((Hi, Wi), dtype=np.float32)
-                
+                trail_mask = np.zeros((image_H, image_W), dtype=np.float32)
+
                 # (A) 연속 선 + 가우시안 블러 (연속감↑)
                 if len(trail) >= 2:
                     pts = np.array(trail, dtype=np.int32).reshape(-1, 1, 2)

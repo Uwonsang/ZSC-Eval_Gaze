@@ -376,10 +376,10 @@ class ShareSubprocVecEnv(ShareVecEnv):
         self.waiting = False
         self.closed = False
         nenvs = len(env_fns)
-        self._mp_ctx = mp.get_context("forkserver") 
+        self._mp_ctx = mp.get_context("forkserver")
         self.remotes, self.work_remotes = zip(*[self._mp_ctx.Pipe() for _ in range(nenvs)])
         least_used_cpus = sorted(
-            [(c_i, c_percent) for c_i, c_percent in enumerate(psutil.cpu_percent(0, percpu=True))],
+            [(c_i, c_percent) for c_i, c_percent in enumerate(psutil.cpu_percent(10, percpu=True))],
             key=lambda x: x[1],
         )
         least_used_cpus = [x[0] for x in least_used_cpus]
@@ -430,7 +430,7 @@ class ShareSubprocVecEnv(ShareVecEnv):
 
     def reset(self):
         for remote in self.remotes:
-            remote.send(("reset", None))        
+            remote.send(("reset", None))
         results = [remote.recv() for remote in self.remotes]
         obs, share_obs, available_actions = zip(*results)
         return obs, np.stack(share_obs), np.stack(available_actions)
@@ -556,7 +556,6 @@ class ShareSubprocDummyBatchVecEnv(ShareVecEnv):
                 zip(self.work_remotes, self.remotes, env_fn_batchs)
             )
         ]
-
         for p_i, p in enumerate(self.ps):
             p.daemon = True  # if the main process crashes, we should not cause things to hang
             p.start()

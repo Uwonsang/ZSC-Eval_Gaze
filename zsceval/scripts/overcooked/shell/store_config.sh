@@ -3,7 +3,8 @@ env="Overcooked"
 
 layout=$1
 
-if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" ]]; then
+if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" || \
+      "${layout}" == "random3_large" || "${layout}" == "random3_large_n" ]]; then
     version="old"
 else
     version="new"

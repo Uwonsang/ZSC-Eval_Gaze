@@ -209,11 +209,14 @@ def main(args):
         os.makedirs(str(run_dir))
     all_args.run_dir = run_dir
     if all_args.overcooked_version == "new":
-        project_name = all_args.env_name + "-new"
+        project_name = all_args.env_name + "_gaze" + "-new"
     else:
-        project_name = all_args.env_name
+        project_name = all_args.env_name+ "_gaze" 
     # wandb
     if all_args.use_wandb:
+        with open("/app/private.yaml") as f:
+            private_info = yaml.load(f, Loader=yaml.FullLoader)
+        wandb.login(key=private_info["wandb_key"])
         run = wandb.init(
             config=all_args,
             project=project_name,

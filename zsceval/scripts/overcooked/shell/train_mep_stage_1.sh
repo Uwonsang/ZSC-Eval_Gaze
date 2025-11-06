@@ -3,8 +3,10 @@ env="Overcooked"
 
 layout=$1
 population_size=$2
+gpu=$3
 
-if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" ]]; then
+if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" || \
+      "${layout}" == "random3_large" || "${layout}" == "random3_large_n" ]]; then
     version="old"
 else
     version="new"
@@ -33,6 +35,7 @@ export POLICY_POOL=${path}
 
 
 echo "env is ${env}, layout is ${layout}, algo is ${algo}, exp is ${exp}, seed is ${seed}, stage is ${stage}"
+CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=${gpu} \
 python train/train_mep.py --env_name ${env} --algorithm_name ${algo} --experiment_name "${exp}" --layout_name ${layout} --num_agents ${num_agents} \
 --seed ${seed} --n_training_threads 1 --num_mini_batch 1 --episode_length 400 --num_env_steps ${num_env_steps} --reward_shaping_horizon ${reward_shaping_horizon} \
 --train_env_batch ${train_batch} --n_rollout_threads ${train_batch} --dummy_batch_size 1 \
@@ -44,4 +47,4 @@ python train/train_mep.py --env_name ${env} --algorithm_name ${algo} --experimen
 --population_yaml_path ${path}/${layout}/mep/s1/train-s${population_size}.yml \
 --population_size ${population_size} --adaptive_agent_name mep_adaptive \
 --use_proper_time_limits \
---wandb_name "your wandb name"
+--wandb_name "overcooked_ai"

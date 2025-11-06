@@ -1,4 +1,5 @@
-layouts="random3"
+layouts="random3_large random3_large_n random3_m_large random3_m_large_n"
+
 path=../../policy_pool/
 for layout in ${layouts};
 do

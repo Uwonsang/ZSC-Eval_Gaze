@@ -148,6 +148,8 @@ class Runner:
         pickle.dump(self.policy_config, open(policy_config_path, "wb"))
         print(f"Pickle dump policy config at {policy_config_path}")
         if "store" in self.experiment_name:
+            self.envs.close()
+            self.eval_envs.close()
             exit()
 
         if self.model_dir is not None:

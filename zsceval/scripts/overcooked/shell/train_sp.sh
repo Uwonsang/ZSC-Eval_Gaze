@@ -2,7 +2,8 @@
 env="Overcooked"
 
 layout=$1
-if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" ]]; then
+if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" || \
+      "${layout}" == "random3_large" || "${layout}" == "random3_large_n" ]]; then
     version="old"
 else
     version="new"
@@ -22,7 +23,7 @@ num_agents=2
 algo="mappo"
 exp="sp"
 seed_begin=1
-seed_max=15
+seed_max=5
 ulimit -n 65536
 
 echo "env is ${env}, layout is ${layout}, algo is ${algo}, exp is ${exp}, seed from ${seed_begin} to ${seed_max}"

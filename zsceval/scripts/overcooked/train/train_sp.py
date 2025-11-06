@@ -132,9 +132,9 @@ def main(args):
 
     # wandb
     if all_args.overcooked_version == "new":
-        project_name = all_args.env_name + "-new"
+        project_name = all_args.env_name + "_gaze" + "-new"
     else:
-        project_name = all_args.env_name
+        project_name = all_args.env_name + "_gaze"
     if all_args.use_wandb:
         with open("/app/private.yaml") as f:
             private_info = yaml.load(f, Loader=yaml.FullLoader)

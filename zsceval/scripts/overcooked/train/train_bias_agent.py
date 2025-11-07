@@ -18,7 +18,7 @@ from zsceval.envs.overcooked.Overcooked_Env import Overcooked
 from zsceval.envs.overcooked_new.Overcooked_Env import Overcooked as Overcooked_new
 from zsceval.overcooked_config import get_overcooked_args
 from zsceval.utils.train_util import get_base_run_dir, setup_seed
-
+import yaml
 
 def make_train_env(all_args, run_dir):
     def get_env_fn(rank):
@@ -191,10 +191,13 @@ def main(args):
 
     # wandb
     if all_args.overcooked_version == "new":
-        project_name = all_args.env_name + "-new"
+        project_name = all_args.env_name + "_bias" + "-new"
     else:
-        project_name = all_args.env_name
+        project_name = all_args.env_name + "_bias"
     if all_args.use_wandb:
+        with open("/app/private.yaml") as f:
+            private_info = yaml.load(f, Loader=yaml.FullLoader)
+        wandb.login(key=private_info["wandb_key"])
         run = wandb.init(
             config=all_args,
             project=project_name,

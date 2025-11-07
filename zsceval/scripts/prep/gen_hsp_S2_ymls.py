@@ -85,7 +85,7 @@ if __name__ == "__main__":
     args = parse_args()
     layout = args.layout
     overcooked_version = "old"
-    if layout in ["random0_m", "random1_m", "random3_m"]:
+    if layout in ["random0_m", "random1_m", "random3_m", "random3_m_large", "random3_m_large_n"]:
         overcooked_version = "new"
     K = args.k
     policy_version = args.bias_agent_version

@@ -19,7 +19,8 @@ stage="S1"
 exp="hsp-${stage}"
 
 
-if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" ]]; then
+if [[ "${layout}" == "random0" || "${layout}" == "random0_medium" || "${layout}" == "random1" || "${layout}" == "random3" || "${layout}" == "small_corridor" || "${layout}" == "unident_s" || \
+      "${layout}" == "random3_large" || "${layout}" == "random3_large_n" ]]; then
     version="old"
     # old layouts
     #! positive reward shaping for "[op]_X" may crash the training, be careful
@@ -110,5 +111,5 @@ do
     --cnn_layers_params "32,3,1,1 64,3,1,1 32,3,1,1" --use_recurrent_policy \
     --use_proper_time_limits \
     --save_interval 25 --log_interval 10 --use_eval --eval_interval 20 --n_eval_rollout_threads 20 \
-    --wandb_name "your wandb name"
+    --wandb_name "overcooked_ai"
 done

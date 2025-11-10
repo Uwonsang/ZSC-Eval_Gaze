@@ -2,6 +2,7 @@
 env="Overcooked"
 
 layout=$1
+gpu=$2
 
 entropy_coefs="0.2 0.05 0.001"
 entropy_coef_horizons="0 6e6 1e7"
@@ -103,6 +104,7 @@ fi
 for seed in $(seq ${seed_begin} ${seed_max});
 do
     echo "seed is ${seed}:"
+    CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=${gpu} \
     python train/train_bias_agent.py --env_name ${env} --algorithm_name ${algo} --experiment_name "${exp}" --layout_name ${layout} --num_agents ${num_agents} \
     --seed ${seed} --n_training_threads 1 --n_rollout_threads 100 --dummy_batch_size 2 --num_mini_batch 1 --episode_length 400 --num_env_steps ${num_env_steps} --reward_shaping_horizon ${reward_shaping_horizon} \
     --overcooked_version ${version} \

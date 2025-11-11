@@ -134,6 +134,10 @@ class AttentionFuser:
         self.stm_sigma = stm_sigma
         self.eta_stm = eta_stm
         self._frame = 0
+              # (r,c) EMA
+        self.vr, self.vc = 0.0, 0.0
+        self.beta = 0.8  # EMA 계수
+
 
     # --------- STM helpers ---------
     def _stm_boost(self) -> np.ndarray:
@@ -184,14 +188,24 @@ class AttentionFuser:
         self.stm = cleaned
 
     # --------- Core helpers ---------
+    # def _drift_from_momentum(self):
+    #     if not self.momentum or len(self.fixations) < 2:
+    #         return (0, 0)
+    #     r1, c1 = self.fixations[-1]
+    #     r0, c0 = self.fixations[-2]
+    #     dr = int(np.sign(r1 - r0)) * self.momentum_scale
+    #     dc = int(np.sign(c1 - c0)) * self.momentum_scale
+    #     return (dr, dc)
+
     def _drift_from_momentum(self):
-        if not self.momentum or len(self.fixations) < 2:
+        if len(self.fixations) < 2 or not self.momentum:
             return (0, 0)
-        r1, c1 = self.fixations[-1]
-        r0, c0 = self.fixations[-2]
-        dr = int(np.sign(r1 - r0)) * self.momentum_scale
-        dc = int(np.sign(c1 - c0)) * self.momentum_scale
-        return (dr, dc)
+        (r1, c1), (r0, c0) = self.fixations[-1], self.fixations[-2]
+        dr, dc = (r1 - r0), (c1 - c0)
+        self.vr = self.beta * self.vr + (1 - self.beta) * dr
+        self.vc = self.beta * self.vc + (1 - self.beta) * dc
+        return (int(np.sign(self.vr)) * self.momentum_scale,
+                int(np.sign(self.vc)) * self.momentum_scale)
 
     def adapt_eta(self, A_post_hat: np.ndarray):
         H = entropy(A_post_hat)  # higher H => more weight to prior

@@ -6,7 +6,7 @@ ALG_SPECS = {
     "MEP":    (3, "rnn",  "mep/s2",      "mep-S2-s24"),
     "TrajeDi":(3, "rnn",  "traj/s2",     "traj-S2-s24"),
     "HSP":    (3, "rnn",  "hsp/s2",      "hsp-S2-s24"),
-    "SP":     (3, "mlp",  "fcp/s1",      "sp-S1-s15"),
+    "SP":     (3, "mlp",  "fcp/s1",      "sp"),
     "E3T":    (3, "mlp",  "e3t/s1",      "e3t"),
     "COLE":   (3, "rnn",  "cole/s2",     "cole-S2-s50"),
 }
@@ -58,6 +58,7 @@ def save_benchmarks(
         (cfg_dir / f"{m}_benchmark.yml").write_text(txt, encoding="utf-8")
 
 if __name__ == "__main__":
-    maps = ["random0", "random0_medium", "random1", "random3", "small_corridor", "unident_s", "random0_m", "random1_m", "random3_m"]
+    maps = ["random0", "random0_medium", "random1", "random3", "small_corridor", "unident_s", "random0_m", "random1_m",
+            "random3_m", "random3_large", "random3_large_n"]
     save_benchmarks(maps, output_dir="config")
     print("Saved to ./config/<map>_benchmark.yaml and <map>_m_benchmark.yml")

@@ -19,6 +19,7 @@ num_agents=2
 seed_begin=1
 seed_max=1
 
+ulimit -n 65536
 algo="mappo"
 exp="store_config_mlp"
 echo "env is ${env}, layout is ${layout}, algo is ${algo}, exp is ${exp}, seed from ${seed_begin} to ${seed_max}"
@@ -35,7 +36,7 @@ do
     --use_wandb
 done
 
-
+ulimit -n 65536
 algo="rmappo"
 exp="store_config_rnn"
 echo "env is ${env}, layout is ${layout}, algo is ${algo}, exp is ${exp}, seed from ${seed_begin} to ${seed_max}"

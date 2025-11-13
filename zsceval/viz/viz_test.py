@@ -250,7 +250,8 @@ def main(args):
     parser = get_config()
     all_args = parse_args(args, parser)
 
-    if all_args.layout_name in ["random0", "random0_medium", "random1", "random3", "small_corridor", "unident_s"]:
+    if all_args.layout_name in ["random0", "random0_medium", "random1", "random3", "small_corridor", "unident_s",
+                                "random3_large", "random3_large_n"]:
         env = Overcooked(all_args, run_dir=None)
     else:
         env = Overcooked_new(all_args, run_dir=None)

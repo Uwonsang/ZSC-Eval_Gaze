@@ -233,7 +233,7 @@ def main(args):
             joint_action = np.array([[int(a0)], [int(a1)]])
 
             both_agents_ob, share_obs, reward, done, info, available_actions = env.step(joint_action)
-            agent_position = env.base_env.state.players[0].position
+            epi_done = done[0]
 
             # render
             image = env.play_render()

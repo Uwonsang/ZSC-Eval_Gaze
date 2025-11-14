@@ -222,8 +222,8 @@ def main(args):
 
             distal, proximal = extract_intention(env, script_human, env.base_env.state)
             print(f"distal: {distal} | proximal: {proximal}")
-            intent = infer_future_distal_intention(env, script_human, env.base_env.state)
-            print("inferred future distal intention:", intent)
+            # intent = infer_future_distal_intention(env, script_human, env.base_env.state)
+            # print("inferred future distal intention:", intent)
             a0_raw = script_human.action(env.base_env.state)
             a0 = Action.ACTION_TO_INDEX[a0_raw]
 
